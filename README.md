@@ -1,6 +1,10 @@
 # dotnet-rpc-benchmark
 rpc component benchmarks  for dotnet
 **[Code Benchmark](https://github.com/IKende/CodeBenchmarkDoc)**
+
+### /tree/master/RPCBenchmark/Examples
+client examples floader
+
 ## Service interface
 ``` csharp
     public interface IGreeter
