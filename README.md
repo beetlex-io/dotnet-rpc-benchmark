@@ -3,7 +3,7 @@ rpc component benchmarks  for dotnet
 **[Code Benchmark](https://github.com/IKende/CodeBenchmarkDoc)**
 
 ### /tree/master/RPCBenchmark/Examples
-client examples floader
+client examples folder
 
 ## Service interface
 ``` csharp
