@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BeetleX.CodeBenchmark" Version="0.7.6" />
+    <PackageReference Include="BeetleX.XRPC.Clients" Version="0.6.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.0.0-preview8.19405.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GRPC\Greeter\Greeter.csproj" />
+    <ProjectReference Include="..\Orleans\Greeter.Grains\OGreeter.Grains.csproj" />
+    <ProjectReference Include="..\XRPC\XRPCModule\XRPCModule.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="run.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
