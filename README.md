@@ -5,7 +5,12 @@ rpc component benchmarks  for dotnet
 -  [orleans](https://github.com/dotnet/orleans)
 -  [grpc](https://github.com/grpc/grpc)
 -  [xrpc](https://github.com/IKende/XRPC)
-
+-  [NetX](https://github.com/luyikk/NetX)
+## Environment
+- Client E31230v2 16g
+- Server E52670v2 32g
+- Network 10Gb
+- System: windows
 ### /tree/master/RPCBenchmark/Examples
 client examples folder
 
