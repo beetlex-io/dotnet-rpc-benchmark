@@ -11,33 +11,23 @@ namespace RPCBenchmark
 
     public class GRPCHandler
     {
-
-        public GRPCHandler()
+        static GRPCHandler()
         {
-            Client = new Channel("192.168.2.19:50051", ChannelCredentials.Insecure);
+            Client = new Channel($"{Setting.SERVER_HOST}:50051", ChannelCredentials.Insecure);
 
             Greeter = new Greeter.GreeterClient(Client);
         }
 
-        public Channel Client { get; private set; }
+        public readonly static Channel Client;
 
-        public Greeter.GreeterClient Greeter { get; private set; }
-
-        private static GRPCHandler mSingle;
-
-        public static GRPCHandler Single
-        {
-            get
-            {
-                if (mSingle == null)
-                    mSingle = new GRPCHandler();
-                return mSingle;
-            }
-        }
+        public readonly static Greeter.GreeterClient Greeter;
     }
+
+
     [System.ComponentModel.Category("RPC")]
-    public class GRPCHelloWorld : CodeBenchmark.IExample
+    public class GRPC_HelloWorld : CodeBenchmark.IExample
     {
+
         public void Dispose()
         {
 
@@ -45,15 +35,13 @@ namespace RPCBenchmark
 
         public async Task Execute()
         {
-            var result = await _greeter.SayHelloAsync(new HelloRequest { Name = "you" });
+            var result = await GRPCHandler.Greeter.SayHelloAsync(new HelloRequest { Name = "you" });
         }
 
         public void Initialize(Benchmark benchmark)
         {
-            _greeter = GRPCHandler.Single.Greeter;
-        }
 
-        private Greeter.GreeterClient _greeter;
+        }
     }
 
 }

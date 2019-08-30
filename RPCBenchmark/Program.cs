@@ -7,9 +7,12 @@ namespace RPCBenchmark
     {
         static void Main(string[] args)
         {
+            if (args != null && args.Length > 0)
+                Setting.SERVER_HOST = args[0];
             Benchmark benchmark = new Benchmark();
             benchmark.Register(typeof(Program).Assembly);
             benchmark.Start();
+            Console.WriteLine($"rpc benchmark server [{Setting.SERVER_HOST}]");
             Console.Read();
         }
     }

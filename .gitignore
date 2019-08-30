@@ -25,3 +25,8 @@ Orleans/Greeter.Server/Properties/
 RPCBenchmark/RPCBenchmark.csproj.user
 RPCBenchmark/Properties/
 XRPC/XRPCServer/XRPCServer.csproj.user
+public/
+NetX/NetxService.csproj.user
+NetX/bin/
+NetX/obj/
+NetX/Properties/

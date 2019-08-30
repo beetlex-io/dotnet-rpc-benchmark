@@ -17,30 +17,44 @@ using OGreeter.IGrains.Messages;
 
 namespace RPCBenchmark.Examples
 {
-    [System.ComponentModel.Category("RPC")]
-    public class OrleansHelloWorld : CodeBenchmark.IExample
-    {
-        static readonly IClusterClient Client;
-        static OrleansHelloWorld()
-        {
 
+    class OrleansHandler
+    {
+        
+        static OrleansHandler()
+        {
             Client = new ClientBuilder()
-            .UseStaticClustering(new IPEndPoint[] { new IPEndPoint(IPAddress.Parse("192.168.2.19"), 50053) })
-            .Configure<ClusterOptions>(options =>
-            {
-                    options.ClusterId = "dev";
-                    options.ServiceId = "HelloWorldApp";
-            })
-            .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(IGreeterGrains).Assembly))
-            .ConfigureLogging(builder =>
-            {
-                   builder.AddConsole();
-                   builder.SetMinimumLevel(LogLevel.Error);
-            })
-            .Build();
+          .UseStaticClustering(new IPEndPoint[] { new IPEndPoint(IPAddress.Parse(Setting.SERVER_HOST), 50053) })
+          .Configure<ClusterOptions>(options =>
+          {
+              options.ClusterId = "dev";
+              options.ServiceId = "HelloWorldApp";
+          })
+          .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(IGreeterGrains).Assembly))
+          .ConfigureLogging(builder =>
+          {
+              builder.AddConsole();
+              builder.SetMinimumLevel(LogLevel.Error);
+          })
+          .Build();
 
             Client.Connect().GetAwaiter().GetResult();
-            greeterGrains = Client.GetGrain<IGreeterGrains>(0);
+            GreeterGrains = Client.GetGrain<IGreeterGrains>(0);
+        }
+        public static readonly IClusterClient Client;
+
+        public static readonly IGreeterGrains GreeterGrains;
+
+    }
+
+    [System.ComponentModel.Category("RPC")]
+    public class Orleans_HelloWorld : CodeBenchmark.IExample
+    {
+        
+        static Orleans_HelloWorld()
+        {
+
+          
 
         }
         public void Dispose()
@@ -49,13 +63,13 @@ namespace RPCBenchmark.Examples
 
         public async Task Execute()
         {
-            var result = await greeterGrains.SayHello(new HelloRequest { Name = "you" });
+            var result = await OrleansHandler.GreeterGrains.SayHello(new HelloRequest { Name = "you" });
         }
 
         public void Initialize(Benchmark benchmark)
         {
 
         }
-        private static IGreeterGrains greeterGrains;
+     
     }
 }

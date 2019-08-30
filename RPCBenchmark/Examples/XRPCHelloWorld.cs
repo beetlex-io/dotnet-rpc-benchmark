@@ -8,35 +8,29 @@ using XRPCModule;
 
 namespace RPCBenchmark
 {
-    public class XRPCHandler
+
+    class XRPCHandler
     {
 
-        public XRPCHandler()
+        static XRPCHandler()
         {
-            Client = new XRPCClient("192.168.2.19", 50052, 3);
+
+            Client = new XRPCClient(Setting.SERVER_HOST, 50052, 3);
             Client.Connect();
             Greeter = Client.Create<XRPCModule.IGreeter>();
         }
 
-        public XRPCClient Client { get; private set; }
+        public readonly static XRPCClient Client;
 
-        public XRPCModule.IGreeter Greeter { get; private set; }
-
-        private static XRPCHandler mSingle;
-
-        public static XRPCHandler Single
-        {
-            get
-            {
-                if (mSingle == null)
-                    mSingle = new XRPCHandler();
-                return mSingle;
-            }
-        }
+        public readonly static XRPCModule.IGreeter Greeter;
     }
+
+
     [System.ComponentModel.Category("RPC")]
-    public class XRPCHelloWorld : CodeBenchmark.IExample
+    public class XRPC_HelloWorld : CodeBenchmark.IExample
     {
+
+
         public void Dispose()
         {
 
@@ -44,14 +38,14 @@ namespace RPCBenchmark
 
         public async Task Execute()
         {
-            var result = await _greeter.SayHello(new HelloRequest { Name = "you" });
+            var result = await XRPCHandler.Greeter.SayHello(new HelloRequest { Name = "you" });
         }
 
         public void Initialize(Benchmark benchmark)
         {
-            _greeter = XRPCHandler.Single.Greeter;
+            
         }
 
-        private XRPCModule.IGreeter _greeter;
+       
     }
 }
