@@ -20,10 +20,28 @@ namespace RPCBenchmark.Examples
 
     class OrleansHandler
     {
-        
+
         static OrleansHandler()
         {
-            Client = new ClientBuilder()
+
+            for (int i = 0; i < 3; i++)
+            {
+                Clients.Add(CreateClient());
+            }
+        }
+        static readonly List<IClusterClient> Clients = new List<IClusterClient>();
+
+        static long mIndex;
+
+        public static IGreeterGrains GreeterGrains()
+        {
+            var index = System.Threading.Interlocked.Increment(ref mIndex);
+            return Clients[(int)(index % Clients.Count)].GetGrain<IGreeterGrains>(index);
+        }
+
+        static IClusterClient CreateClient()
+        {
+            var client = new ClientBuilder()
           .UseStaticClustering(new IPEndPoint[] { new IPEndPoint(IPAddress.Parse(Setting.SERVER_HOST), 50053) })
           .Configure<ClusterOptions>(options =>
           {
@@ -38,23 +56,20 @@ namespace RPCBenchmark.Examples
           })
           .Build();
 
-            Client.Connect().GetAwaiter().GetResult();
-            GreeterGrains = Client.GetGrain<IGreeterGrains>(0);
+            client.Connect().GetAwaiter().GetResult();
+            return client;
         }
-        public static readonly IClusterClient Client;
-
-        public static readonly IGreeterGrains GreeterGrains;
 
     }
 
     [System.ComponentModel.Category("RPC")]
     public class Orleans_HelloWorld : CodeBenchmark.IExample
     {
-        
+
         static Orleans_HelloWorld()
         {
 
-          
+
 
         }
         public void Dispose()
@@ -63,13 +78,14 @@ namespace RPCBenchmark.Examples
 
         public async Task Execute()
         {
-            var result = await OrleansHandler.GreeterGrains.SayHello(new HelloRequest { Name = "you" });
+            var result = await GreeterGrains.SayHello(new HelloRequest { Name = "you" });
         }
 
         public void Initialize(Benchmark benchmark)
         {
-
+            GreeterGrains = OrleansHandler.GreeterGrains();
         }
-     
+
+        IGreeterGrains GreeterGrains;
     }
 }

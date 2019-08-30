@@ -10,36 +10,36 @@ namespace RPCBenchmark.Examples
 {
     public class NetxHandler
     {
-        public NetxHandler()
+        static NetxHandler()
         {
-            Client = new NetxSClientBuilder()
-                .ConfigConnection(p =>
-                {
-                    p.Host = Setting.SERVER_HOST;
-                    p.Port = 50054;
-                    p.VerifyKey = "11111";
-                    p.ServiceName = "hellowordservice";
-                    p.RequestTimeOut = 0;
-                })
-                .Build();
-            Greeter = Client.Get<ITestServer>();
-        }
-
-        public INetxSClient Client { get; private set; }
-
-        public ITestServer Greeter { get; private set; }
-
-        private static NetxHandler mSingle;
-
-        public static NetxHandler Single
-        {
-            get
+            for(int i=0;i<3;i++)
             {
-                if (mSingle == null)
-                    mSingle = new NetxHandler();
-                return mSingle;
+               var client = new NetxSClientBuilder()
+               .ConfigConnection(p =>
+               {
+                   p.Host = Setting.SERVER_HOST;
+                   p.Port = 50054;
+                   p.VerifyKey = "11111";
+                   p.ServiceName = "hellowordservice";
+                   p.RequestTimeOut = 0;
+               })
+               .Build();
+                mClients.Add(client);
             }
         }
+
+        private static long mIndex;
+
+        public static ITestServer GetClient()
+        {
+            long index = System.Threading.Interlocked.Increment(ref mIndex);
+            return mClients[(int)(index % mClients.Count)].Get<ITestServer>();
+        }
+
+
+        private static List<NetxSClient> mClients = new List<NetxSClient>();
+
+       
     }
     [System.ComponentModel.Category("RPC")]
     public class Netx_HelloWorld : CodeBenchmark.IExample
@@ -56,7 +56,7 @@ namespace RPCBenchmark.Examples
 
         public void Initialize(Benchmark benchmark)
         {
-            _greeter = NetxHandler.Single.Greeter;
+            _greeter = NetxHandler.GetClient();
         }
 
         private ITestServer _greeter;

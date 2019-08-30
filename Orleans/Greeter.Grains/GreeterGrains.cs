@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace OGreeter.Grains
 {
-    [Reentrant]
+    [StatelessWorker]
     public class GreeterGrains :Orleans.Grain, IGreeterGrains
     {
         public Task<HelloReply> SayHello(HelloRequest request)

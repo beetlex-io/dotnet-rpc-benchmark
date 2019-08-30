@@ -13,14 +13,24 @@ namespace RPCBenchmark
     {
         static GRPCHandler()
         {
-            Client = new Channel($"{Setting.SERVER_HOST}:50051", ChannelCredentials.Insecure);
-
-            Greeter = new Greeter.GreeterClient(Client);
+                  
+            for(int i=0;i<3;i++)
+            {
+                var client = new Channel($"{Setting.SERVER_HOST}:50051", ChannelCredentials.Insecure);
+                mClients.Add(new Greeter.GreeterClient(client));
+            }
         }
 
-        public readonly static Channel Client;
+        static List<Greeter.GreeterClient> mClients = new List<Greeter.GreeterClient>();
 
-        public readonly static Greeter.GreeterClient Greeter;
+        static long mIndex;
+
+        public static Greeter.GreeterClient GetClient()
+        {
+            var index = System.Threading.Interlocked.Increment(ref mIndex);
+            return mClients[(int)(mIndex % mClients.Count)];
+        }
+
     }
 
 
@@ -35,13 +45,15 @@ namespace RPCBenchmark
 
         public async Task Execute()
         {
-            var result = await GRPCHandler.Greeter.SayHelloAsync(new HelloRequest { Name = "you" });
+            var result = await Greeter.SayHelloAsync(new HelloRequest { Name = "you" });
         }
 
         public void Initialize(Benchmark benchmark)
         {
-
+            Greeter = GRPCHandler.GetClient();
         }
+
+        private Greeter.GreeterClient Greeter;
     }
 
 }
