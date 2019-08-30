@@ -31,9 +31,13 @@ SayHello(new HelloRequest { Name = "you" });
 return new HelloReply { Message = "Hello " + request.Name };
 ```
 ## Result(2019-9-29)
-* c50
+### 5 concurrency
+![](https://github.com/IKende/dotnet-rpc-benchmark/blob/master/C5.png?raw=true)
+### 10 concurrency
+![](https://github.com/IKende/dotnet-rpc-benchmark/blob/master/c10.png?raw=true)
+### 20 concurrency
+![](https://github.com/IKende/dotnet-rpc-benchmark/blob/master/C20.png?raw=true)
+### 50 concurrency
 ![](https://github.com/IKende/dotnet-rpc-benchmark/blob/master/C50.png?raw=true)
-* c100
+### 100 concurrency
 ![](https://github.com/IKende/dotnet-rpc-benchmark/blob/master/C100.png?raw=true)
-* c200
-![](https://github.com/IKende/dotnet-rpc-benchmark/blob/master/C200.png?raw=true)
