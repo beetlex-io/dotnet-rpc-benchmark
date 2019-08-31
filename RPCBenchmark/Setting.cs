@@ -7,6 +7,7 @@ namespace RPCBenchmark
     class Setting
     {
 
-        public static string SERVER_HOST = "192.168.2.19";
+        //public static string SERVER_HOST = "192.168.1.19";
+        public static string SERVER_HOST = "127.0.0.1";
     }
 }

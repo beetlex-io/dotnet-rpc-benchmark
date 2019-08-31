@@ -41,8 +41,8 @@ namespace RPCBenchmark.Examples
 
        
     }
-    [System.ComponentModel.Category("RPC")]
-    public class Netx_HelloWorld : CodeBenchmark.IExample
+    [System.ComponentModel.Category("Hello")]
+    public class Netx_Hello : CodeBenchmark.IExample
     {
         public void Dispose()
         {
@@ -62,12 +62,79 @@ namespace RPCBenchmark.Examples
         private ITestServer _greeter;
     }
 
+    [System.ComponentModel.Category("Register")]
+    public class Netx_Register : CodeBenchmark.IExample
+    {
+        public void Dispose()
+        {
+
+        }
+
+        public async Task Execute()
+        {
+            await _greeter.Register("henryfan", "henryfan@msn.com", "12345678", "cxo", "guangzhou");
+        }
+
+        public void Initialize(Benchmark benchmark)
+        {
+            _greeter = NetxHandler.GetClient();
+        }
+
+        private ITestServer _greeter;
+    }
+
+
+    [System.ComponentModel.Category("List")]
+    public class Netx_List : CodeBenchmark.IExample
+    {
+        public void Dispose()
+        {
+
+        }
+
+        public async Task Execute()
+        {
+            var result =await _greeter.List(10);
+            if (result.Count < 10)
+                throw new Exception("list error");
+        }
+
+        public void Initialize(Benchmark benchmark)
+        {
+            _greeter = NetxHandler.GetClient();
+        }
+
+        private ITestServer _greeter;
+    }
+
 
     [Build]
     public interface ITestServer
     {
         [TAG(1000)]
         Task<NetxHelloReply> SayHello(NetxHelloRequest msg);
+
+        [TAG(1001)]
+        Task<User> Register(string name, string email, string password, string title, string city);
+
+        [TAG(1002)]
+        Task<List<User>> List(int count);
+    }
+
+
+    public class User
+    {
+        public string ID { get; set; }
+
+        public string Name { get; set; }
+
+        public string Email { get; set; }
+
+        public string Password { get; set; }
+
+        public string Title { get; set; }
+
+        public string City { get; set; }
     }
 
     public class NetxHelloRequest

@@ -13,8 +13,8 @@ namespace RPCBenchmark
     {
         static GRPCHandler()
         {
-                  
-            for(int i=0;i<3;i++)
+
+            for (int i = 0; i < 3; i++)
             {
                 var client = new Channel($"{Setting.SERVER_HOST}:50051", ChannelCredentials.Insecure);
                 mClients.Add(new Greeter.GreeterClient(client));
@@ -34,8 +34,8 @@ namespace RPCBenchmark
     }
 
 
-    [System.ComponentModel.Category("RPC")]
-    public class GRPC_HelloWorld : CodeBenchmark.IExample
+    [System.ComponentModel.Category("Hello")]
+    public class GRPC_Hello : CodeBenchmark.IExample
     {
 
         public void Dispose()
@@ -46,6 +46,60 @@ namespace RPCBenchmark
         public async Task Execute()
         {
             var result = await Greeter.SayHelloAsync(new HelloRequest { Name = "you" });
+        }
+
+        public void Initialize(Benchmark benchmark)
+        {
+            Greeter = GRPCHandler.GetClient();
+        }
+
+        private Greeter.GreeterClient Greeter;
+    }
+
+    [System.ComponentModel.Category("Register")]
+    public class GRPC_Register : CodeBenchmark.IExample
+    {
+
+        public void Dispose()
+        {
+
+        }
+
+        public async Task Execute()
+        {
+            var request = new RegisterRequest
+            {
+                Name = "henryfan",
+                City = "guangzhou",
+                Email = "henryfan@msn.com",
+                Title = "cxo",
+                Password = "12345678"
+            };
+            var result = await Greeter.RegisterAsync(request);
+        }
+
+        public void Initialize(Benchmark benchmark)
+        {
+            Greeter = GRPCHandler.GetClient();
+        }
+
+        private Greeter.GreeterClient Greeter;
+    }
+
+    [System.ComponentModel.Category("List")]
+    public class GRPC_List : CodeBenchmark.IExample
+    {
+
+        public void Dispose()
+        {
+
+        }
+
+        public async Task Execute()
+        {
+            var result = await Greeter.ListAsync(new SearchRequest { Count = 10 });
+            if (result.Items.Count < 10)
+                throw new Exception("list error");
         }
 
         public void Initialize(Benchmark benchmark)

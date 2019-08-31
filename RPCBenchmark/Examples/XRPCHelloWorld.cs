@@ -26,26 +26,58 @@ namespace RPCBenchmark
     }
 
 
-    [System.ComponentModel.Category("RPC")]
-    public class XRPC_HelloWorld : CodeBenchmark.IExample
+    [System.ComponentModel.Category("Hello")]
+    public class XRPC_Hello : CodeBenchmark.IExample
     {
-
-
         public void Dispose()
         {
 
         }
-
         public async Task Execute()
         {
             var result = await XRPCHandler.Greeter.SayHello(new HelloRequest { Name = "you" });
         }
-
         public void Initialize(Benchmark benchmark)
         {
             
         }
-
        
+    }
+    [System.ComponentModel.Category("Register")]
+    public class XRPC_Register : CodeBenchmark.IExample
+    {
+        public void Dispose()
+        {
+
+        }
+        public async Task Execute()
+        {
+            var result = await XRPCHandler.Greeter.Register("henryfan", "henryfan@msn.com", "12345678", "cxo", "guangzhou");
+        }
+        public void Initialize(Benchmark benchmark)
+        {
+
+        }
+
+    }
+
+    [System.ComponentModel.Category("List")]
+    public class XRPC_List : CodeBenchmark.IExample
+    {
+        public void Dispose()
+        {
+
+        }
+        public async Task Execute()
+        {
+            var result = await XRPCHandler.Greeter.List(10);
+            if (result.Count < 10)
+                throw new Exception("list error");
+        }
+        public void Initialize(Benchmark benchmark)
+        {
+
+        }
+
     }
 }

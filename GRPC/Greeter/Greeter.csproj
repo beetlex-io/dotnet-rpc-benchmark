@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="..\helloworld.proto">
-      <Link>helloworld.proto</Link>
+    <Protobuf Include="..\module.proto">
+      <Link>module.proto</Link>
     </Protobuf>
   </ItemGroup>
 

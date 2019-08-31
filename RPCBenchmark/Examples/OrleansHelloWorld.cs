@@ -62,25 +62,59 @@ namespace RPCBenchmark.Examples
 
     }
 
-    [System.ComponentModel.Category("RPC")]
-    public class Orleans_HelloWorld : CodeBenchmark.IExample
+    [System.ComponentModel.Category("Hello")]
+    public class Orleans_Hello : CodeBenchmark.IExample
     {
 
-        static Orleans_HelloWorld()
-        {
-
-
-
-        }
         public void Dispose()
         {
         }
-
         public async Task Execute()
         {
             var result = await GreeterGrains.SayHello(new HelloRequest { Name = "you" });
         }
+        public void Initialize(Benchmark benchmark)
+        {
+            GreeterGrains = OrleansHandler.GreeterGrains();
+        }
 
+        IGreeterGrains GreeterGrains;
+    }
+
+    [System.ComponentModel.Category("Register")]
+    public class Orleans_Register : CodeBenchmark.IExample
+    {
+
+
+        public void Dispose()
+        {
+        }
+        public async Task Execute()
+        {
+            var result = await GreeterGrains.Register("henryfan", "henryfan@msn.com", "12345678", "cxo", "guangzhou"); 
+        }
+        public void Initialize(Benchmark benchmark)
+        {
+            GreeterGrains = OrleansHandler.GreeterGrains();
+        }
+
+        IGreeterGrains GreeterGrains;
+    }
+
+    [System.ComponentModel.Category("List")]
+    public class Orleans_List : CodeBenchmark.IExample
+    {
+
+
+        public void Dispose()
+        {
+        }
+        public async Task Execute()
+        {
+            var result = await GreeterGrains.List(10);
+            if (result.Count < 10)
+                throw new Exception("list error");
+        }
         public void Initialize(Benchmark benchmark)
         {
             GreeterGrains = OrleansHandler.GreeterGrains();
