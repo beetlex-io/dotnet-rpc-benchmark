@@ -30,3 +30,4 @@ NetX/NetxService.csproj.user
 NetX/bin/
 NetX/obj/
 NetX/Properties/
+build.bat
