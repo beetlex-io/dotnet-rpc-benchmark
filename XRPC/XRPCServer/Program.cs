@@ -59,7 +59,6 @@ namespace XRPCServer
                 City = city,
                 CreateTime = DateTime.Now,
                 ID= Guid.NewGuid().ToString("N")
-
             });
         }
 

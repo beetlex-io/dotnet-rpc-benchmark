@@ -15,7 +15,6 @@ namespace XRPCModule
 
         Task<List<User>> List(int count);
         
-
     }
 
     [MessagePackObject]
