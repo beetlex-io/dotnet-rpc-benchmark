@@ -122,4 +122,26 @@ namespace RPCBenchmark.Examples
 
         IGreeterGrains GreeterGrains;
     }
+
+    [System.ComponentModel.Category("Add")]
+    public class Orleans_Add : CodeBenchmark.IExample
+    {
+
+
+        public void Dispose()
+        {
+        }
+        public async Task Execute()
+        {
+            var result = await GreeterGrains.Add(1,2);
+            if (result!=3)
+                throw new Exception("result error");
+        }
+        public void Initialize(Benchmark benchmark)
+        {
+            GreeterGrains = OrleansHandler.GreeterGrains();
+        }
+
+        IGreeterGrains GreeterGrains;
+    }
 }

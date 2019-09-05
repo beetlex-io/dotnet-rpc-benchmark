@@ -8,6 +8,11 @@ namespace NetxTestServer
 {
     public class TestContoller : AsyncController, ITestServer
     {
+        public Task<int> Add(int a, int b)
+        {
+            return Task.FromResult(a + b);
+        }
+
         public Task<List<User>> List(int count)
         {
             List<User> items = new List<User>(count);

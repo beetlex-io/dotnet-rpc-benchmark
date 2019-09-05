@@ -80,4 +80,24 @@ namespace RPCBenchmark
         }
 
     }
+
+    [System.ComponentModel.Category("Add")]
+    public class XRPC_Add : CodeBenchmark.IExample
+    {
+        public void Dispose()
+        {
+
+        }
+        public async Task Execute()
+        {
+            var result = await XRPCHandler.Greeter.Add(1,2);
+            if (result!=3)
+                throw new Exception("res error");
+        }
+        public void Initialize(Benchmark benchmark)
+        {
+
+        }
+
+    }
 }

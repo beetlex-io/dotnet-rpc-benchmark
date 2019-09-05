@@ -23,6 +23,7 @@ namespace RPCBenchmark.Examples
                    p.ServiceName = "hellowordservice";
                    p.RequestTimeOut = 0;
                })
+               .ConfigObjFormat(()=>new NetxSerializes.JSONSerializes())
                .Build();
                 mClients.Add(client);
             }
@@ -107,6 +108,30 @@ namespace RPCBenchmark.Examples
         private ITestServer _greeter;
     }
 
+    [System.ComponentModel.Category("Add")]
+    public class Netx_Add : CodeBenchmark.IExample
+    {
+        public void Dispose()
+        {
+
+        }
+
+        public async Task Execute()
+        {
+            var r = await _greeter.Add(1, 2);
+
+            if (r != 3)
+                throw new Exception("res error");
+        }
+
+        public void Initialize(Benchmark benchmark)
+        {
+            _greeter = NetxHandler.GetClient();
+        }
+
+        private ITestServer _greeter;
+    }
+
 
     [Build]
     public interface ITestServer
@@ -119,6 +144,9 @@ namespace RPCBenchmark.Examples
 
         [TAG(1002)]
         Task<List<User>> List(int count);
+
+        [TAG(1003)]
+        Task<int> Add(int a, int b);
     }
 
 

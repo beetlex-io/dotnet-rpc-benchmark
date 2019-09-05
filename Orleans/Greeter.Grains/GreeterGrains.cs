@@ -10,6 +10,11 @@ namespace OGreeter.Grains
     [StatelessWorker]
     public class GreeterGrains : Orleans.Grain, IGreeterGrains
     {
+        public Task<int> Add(int a, int b)
+        {
+            return Task.FromResult(a + b);
+        }
+
         public Task<List<User>> List(int count)
         {
             List<User> items = new List<User>(count);

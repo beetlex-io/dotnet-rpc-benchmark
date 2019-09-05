@@ -66,5 +66,10 @@ namespace XRPCServer
         {
             return Task.FromResult(new HelloReply { Message = "Hello " + request.Name });
         }
+
+        public Task<int> Add(int a,int b)
+        {
+            return Task.FromResult(a + b);
+        }
     }
 }
