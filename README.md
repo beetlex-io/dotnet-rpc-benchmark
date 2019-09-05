@@ -14,7 +14,7 @@ rpc component benchmarks for dotnet
 - **System:**  Windows server
 
 ### [Result status](https://github.com/IKende/dotnet-rpc-benchmark/tree/master/Result)
-![](https://github.com/IKende/dotnet-rpc-benchmark/raw/master/Result/10G_128C.png?raw=true)
+![](https://github.com/IKende/dotnet-rpc-benchmark/raw/master/Result/10G-Result.png?raw=true)
 
 ### /tree/master/RPCBenchmark/Examples
 client examples folder
