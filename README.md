@@ -14,7 +14,11 @@ rpc component benchmarks for dotnet
 - **System:**  Windows server
 
 ### [Result status](https://github.com/IKende/dotnet-rpc-benchmark/tree/master/Result)
+- 10Gb network
 ![](https://github.com/IKende/dotnet-rpc-benchmark/raw/master/Result/10G-Result.png?raw=true)
+
+- 1Gb network
+![](https://github.com/IKende/dotnet-rpc-benchmark/raw/master/Result/1G-Result.png?raw=true)
 
 ### /tree/master/RPCBenchmark/Examples
 client examples folder
