@@ -12,5 +12,7 @@ namespace OGreeter.IGrains
         Task<User> Register(string name, string email, string password, string title, string city);
 
         Task<List<User>> List(int count);
+
+        Task<int> Add(int a, int b);
     }
 }

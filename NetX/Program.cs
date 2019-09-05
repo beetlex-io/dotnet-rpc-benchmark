@@ -18,7 +18,7 @@ namespace NetxTest
                       p.MaxConnectCout = 100;
                       p.Port = 50054;
                   })
-                  .ConfigObjFormat()
+                  .ConfigObjFormat(()=>new NetxSerializes.JSONSerializes())
                   .ConfigBase(p =>
                   {
                       p.VerifyKey = "11111";

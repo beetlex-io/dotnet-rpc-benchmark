@@ -17,6 +17,9 @@ namespace NetxTestServer
 
         [TAG(1002)]
         Task<List<User>> List(int count);
+
+        [TAG(1003)]
+        Task<int> Add(int a, int b);
     }
 
 
