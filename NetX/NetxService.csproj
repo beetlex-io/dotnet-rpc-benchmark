@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    <ServerGarbageCollection>true</ServerGarbageCollection>
     <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <ServerGarbageCollection>true</ServerGarbageCollection>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Greeter\Greeter.csproj" />
+    <PackageReference Include="NetxServer" Version="1.4.3" />
   </ItemGroup>
 
   <ItemGroup>

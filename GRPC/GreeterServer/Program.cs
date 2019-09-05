@@ -26,6 +26,41 @@ namespace GreeterServer
         {
             return Task.FromResult(new HelloReply { Message = "Hello " + request.Name });
         }
+
+        public override Task<User> Register(RegisterRequest request, ServerCallContext context)
+        {
+            return Task.FromResult(new User
+            {
+                Name = request.Name,
+                Email = request.Email,
+                Password = request.Password,
+                Title = request.Title,
+                City = request.City,
+                CreateTime = DateTime.Now.Ticks,
+                ID = Guid.NewGuid().ToString("N")
+
+            });
+        }
+
+        public override Task<SearchReply> List(SearchRequest request, ServerCallContext context)
+        {
+            SearchReply result = new SearchReply();
+            for (int i = 0; i < request.Count; i++)
+            {
+                var item = new User
+                {
+                    Name = "henryfan",
+                    City = "guangzhou",
+                    Email = "henryfan@msn.com",
+                    Title = "cxo",
+                    Password = "12345678",
+                    ID = Guid.NewGuid().ToString("N"),
+                    CreateTime = DateTime.Now.Ticks
+                };
+                result.Items.Add(item);
+            }
+            return Task.FromResult(result);
+        }
     }
 
     class Program
@@ -34,10 +69,13 @@ namespace GreeterServer
 
         public static void Main(string[] args)
         {
+            string host = "127.0.0.1";
+            if (args != null && args.Length > 0)
+                host = args[0];
             Server server = new Server
             {
                 Services = { Greeter.BindService(new GreeterImpl()) },
-                Ports = { new ServerPort("", Port, ServerCredentials.Insecure) }
+                Ports = { new ServerPort(host, Port, ServerCredentials.Insecure) }
             };
             server.Start();
 

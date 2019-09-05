@@ -17,45 +17,109 @@ using OGreeter.IGrains.Messages;
 
 namespace RPCBenchmark.Examples
 {
-    [System.ComponentModel.Category("RPC")]
-    public class OrleansHelloWorld : CodeBenchmark.IExample
+
+    class OrleansHandler
     {
-        static readonly IClusterClient Client;
-        static OrleansHelloWorld()
+
+        static OrleansHandler()
         {
 
-            Client = new ClientBuilder()
-            .UseStaticClustering(new IPEndPoint[] { new IPEndPoint(IPAddress.Parse("192.168.2.19"), 50053) })
-            .Configure<ClusterOptions>(options =>
+            for (int i = 0; i < 3; i++)
             {
-                    options.ClusterId = "dev";
-                    options.ServiceId = "HelloWorldApp";
-            })
-            .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(IGreeterGrains).Assembly))
-            .ConfigureLogging(builder =>
-            {
-                   builder.AddConsole();
-                   builder.SetMinimumLevel(LogLevel.Error);
-            })
-            .Build();
-
-            Client.Connect().GetAwaiter().GetResult();
-            greeterGrains = Client.GetGrain<IGreeterGrains>(0);
-
+                Clients.Add(CreateClient());
+            }
         }
+        static readonly List<IClusterClient> Clients = new List<IClusterClient>();
+
+        static long mIndex;
+
+        public static IGreeterGrains GreeterGrains()
+        {
+            var index = System.Threading.Interlocked.Increment(ref mIndex);
+            return Clients[(int)(index % Clients.Count)].GetGrain<IGreeterGrains>(index);
+        }
+
+        static IClusterClient CreateClient()
+        {
+            var client = new ClientBuilder()
+          .UseStaticClustering(new IPEndPoint[] { new IPEndPoint(IPAddress.Parse(Setting.SERVER_HOST), 50053) })
+          .Configure<ClusterOptions>(options =>
+          {
+              options.ClusterId = "dev";
+              options.ServiceId = "HelloWorldApp";
+          })
+          .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(IGreeterGrains).Assembly))
+          .ConfigureLogging(builder =>
+          {
+              builder.AddConsole();
+              builder.SetMinimumLevel(LogLevel.Error);
+          })
+          .Build();
+
+            client.Connect().GetAwaiter().GetResult();
+            return client;
+        }
+
+    }
+
+    [System.ComponentModel.Category("Hello")]
+    public class Orleans_Hello : CodeBenchmark.IExample
+    {
+
         public void Dispose()
         {
         }
-
         public async Task Execute()
         {
-            var result = await greeterGrains.SayHello(new HelloRequest { Name = "you" });
+            var result = await GreeterGrains.SayHello(new HelloRequest { Name = "you" });
         }
-
         public void Initialize(Benchmark benchmark)
         {
-
+            GreeterGrains = OrleansHandler.GreeterGrains();
         }
-        private static IGreeterGrains greeterGrains;
+
+        IGreeterGrains GreeterGrains;
+    }
+
+    [System.ComponentModel.Category("Register")]
+    public class Orleans_Register : CodeBenchmark.IExample
+    {
+
+
+        public void Dispose()
+        {
+        }
+        public async Task Execute()
+        {
+            var result = await GreeterGrains.Register("henryfan", "henryfan@msn.com", "12345678", "cxo", "guangzhou"); 
+        }
+        public void Initialize(Benchmark benchmark)
+        {
+            GreeterGrains = OrleansHandler.GreeterGrains();
+        }
+
+        IGreeterGrains GreeterGrains;
+    }
+
+    [System.ComponentModel.Category("List")]
+    public class Orleans_List : CodeBenchmark.IExample
+    {
+
+
+        public void Dispose()
+        {
+        }
+        public async Task Execute()
+        {
+            var result = await GreeterGrains.List(10);
+            if (result.Count < 10)
+                throw new Exception("list error");
+        }
+        public void Initialize(Benchmark benchmark)
+        {
+            GreeterGrains = OrleansHandler.GreeterGrains();
+        }
+
+        IGreeterGrains GreeterGrains;
     }
 }

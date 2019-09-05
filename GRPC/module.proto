@@ -25,6 +25,8 @@ package helloworld;
 service Greeter {
   // Sends a greeting
   rpc SayHello (HelloRequest) returns (HelloReply) {}
+  rpc Register (RegisterRequest) returns (User){}
+  rpc List(SearchRequest) returns(SearchReply){}
 }
 
 // The request message containing the user's name.
@@ -35,4 +37,33 @@ message HelloRequest {
 // The response message containing the greetings
 message HelloReply {
   string message = 1;
+}
+
+message RegisterRequest
+{
+	string Name=1;
+	string Email=2;
+	string Password=3;
+	string Title=4;
+	string City=5;
+}
+message User
+{
+	string Name=1;
+	string Email=2;
+	string Password=3;
+	string Title=4;
+	string City=5;
+	int64 CreateTime=6;
+	string ID=7;
+}
+
+message SearchRequest
+{
+	int32 Count =1;
+}
+
+message SearchReply
+{
+	repeated User Items=1;
 }

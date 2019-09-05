@@ -25,6 +25,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OGreeter.IGrains", "Orleans
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OGreeter.Server", "Orleans\Greeter.Server\OGreeter.Server.csproj", "{1F38FD75-6434-4631-B1E5-01BAF40F8E03}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Netx", "Netx", "{B0829E09-EF88-4993-86E5-029BC8560441}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetxService", "NetX\NetxService.csproj", "{3DD85C05-5C85-435E-B35F-ADB15354000B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +67,10 @@ Global
 		{1F38FD75-6434-4631-B1E5-01BAF40F8E03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F38FD75-6434-4631-B1E5-01BAF40F8E03}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F38FD75-6434-4631-B1E5-01BAF40F8E03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DD85C05-5C85-435E-B35F-ADB15354000B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DD85C05-5C85-435E-B35F-ADB15354000B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DD85C05-5C85-435E-B35F-ADB15354000B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DD85C05-5C85-435E-B35F-ADB15354000B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -75,6 +83,7 @@ Global
 		{7C067BCC-934F-4B09-8235-FC969F7A2775} = {553CF7A6-382B-4704-AA6C-136A988C78B6}
 		{8064BD99-BF9C-407F-80F5-9FC4A9A56308} = {553CF7A6-382B-4704-AA6C-136A988C78B6}
 		{1F38FD75-6434-4631-B1E5-01BAF40F8E03} = {553CF7A6-382B-4704-AA6C-136A988C78B6}
+		{3DD85C05-5C85-435E-B35F-ADB15354000B} = {B0829E09-EF88-4993-86E5-029BC8560441}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {20F3CBCA-794C-4559-9E35-3022E8F867D0}

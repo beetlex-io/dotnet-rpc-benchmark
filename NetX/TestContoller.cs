@@ -1,40 +1,20 @@
-﻿using BeetleX.EventArgs;
-using EventNext;
+﻿using Netx.Service;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
-using XRPCModule;
 
-namespace XRPCServer
+namespace NetxTestServer
 {
-    class Program
-    {
-        private static BeetleX.XRPC.XRPCServer mXRPCServer;
-
-        static void Main(string[] args)
-        {
-            string host = "127.0.0.1";
-            if (args != null && args.Length > 0)
-                host = args[0];
-            mXRPCServer = new BeetleX.XRPC.XRPCServer();
-            mXRPCServer.ServerOptions.LogLevel = BeetleX.EventArgs.LogType.Error;
-            mXRPCServer.ServerOptions.DefaultListen.Host = host;
-            mXRPCServer.ServerOptions.DefaultListen.Port = 50052;
-            mXRPCServer.Register(typeof(Program).Assembly);
-            mXRPCServer.Open();
-            Console.Read();
-        }
-
-    }
-    [Service(typeof(IGreeter))]
-    public class Greeter : XRPCModule.IGreeter
+    public class TestContoller : AsyncController, ITestServer
     {
         public Task<List<User>> List(int count)
         {
             List<User> items = new List<User>(count);
-            for(int i=0;i<count;i++)
+            for (int i = 0; i < count; i++)
             {
-                var item = new User {
+                var item = new User
+                {
                     Name = "henryfan",
                     City = "guangzhou",
                     Email = "henryfan@msn.com",
@@ -59,12 +39,14 @@ namespace XRPCServer
                 City = city,
                 CreateTime = DateTime.Now,
                 ID= Guid.NewGuid().ToString("N")
+
             });
         }
 
-        public Task<HelloReply> SayHello(HelloRequest request)
-        {
-            return Task.FromResult(new HelloReply { Message = "Hello " + request.Name });
-        }
+        public Task<HelloReply> SayHello(HelloRequest msg)
+        => Task.FromResult(new HelloReply { Message = "Hello" + msg.Name });
+
+        public Task<string> SayHello(string msg)
+         => Task.FromResult("Hello" + msg);
     }
 }

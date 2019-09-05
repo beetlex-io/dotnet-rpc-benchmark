@@ -15,7 +15,10 @@ namespace OGreeter.Server
     {
         static Task Main(string[] args)
         {
-            IPAddress ip = IPAddress.Parse("192.168.2.19");
+            string host = "127.0.0.1";
+            if (args != null && args.Length > 0)
+                host = args[0];
+            IPAddress ip = IPAddress.Parse(host);
             return new HostBuilder()
             .UseOrleans(builder =>
             {

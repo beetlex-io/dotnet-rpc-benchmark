@@ -8,50 +8,76 @@ using XRPCModule;
 
 namespace RPCBenchmark
 {
-    public class XRPCHandler
+
+    class XRPCHandler
     {
 
-        public XRPCHandler()
+        static XRPCHandler()
         {
-            Client = new XRPCClient("192.168.2.19", 50052, 3);
+
+            Client = new XRPCClient(Setting.SERVER_HOST, 50052, 3);
             Client.Connect();
             Greeter = Client.Create<XRPCModule.IGreeter>();
         }
 
-        public XRPCClient Client { get; private set; }
+        public readonly static XRPCClient Client;
 
-        public XRPCModule.IGreeter Greeter { get; private set; }
-
-        private static XRPCHandler mSingle;
-
-        public static XRPCHandler Single
-        {
-            get
-            {
-                if (mSingle == null)
-                    mSingle = new XRPCHandler();
-                return mSingle;
-            }
-        }
+        public readonly static XRPCModule.IGreeter Greeter;
     }
-    [System.ComponentModel.Category("RPC")]
-    public class XRPCHelloWorld : CodeBenchmark.IExample
+
+
+    [System.ComponentModel.Category("Hello")]
+    public class XRPC_Hello : CodeBenchmark.IExample
     {
         public void Dispose()
         {
 
         }
-
         public async Task Execute()
         {
-            var result = await _greeter.SayHello(new HelloRequest { Name = "you" });
+            var result = await XRPCHandler.Greeter.SayHello(new HelloRequest { Name = "you" });
         }
-
         public void Initialize(Benchmark benchmark)
         {
-            _greeter = XRPCHandler.Single.Greeter;
+            
+        }
+       
+    }
+    [System.ComponentModel.Category("Register")]
+    public class XRPC_Register : CodeBenchmark.IExample
+    {
+        public void Dispose()
+        {
+
+        }
+        public async Task Execute()
+        {
+            var result = await XRPCHandler.Greeter.Register("henryfan", "henryfan@msn.com", "12345678", "cxo", "guangzhou");
+        }
+        public void Initialize(Benchmark benchmark)
+        {
+
         }
 
-        private XRPCModule.IGreeter _greeter;
+    }
+
+    [System.ComponentModel.Category("List")]
+    public class XRPC_List : CodeBenchmark.IExample
+    {
+        public void Dispose()
+        {
+
+        }
+        public async Task Execute()
+        {
+            var result = await XRPCHandler.Greeter.List(10);
+            if (result.Count < 10)
+                throw new Exception("list error");
+        }
+        public void Initialize(Benchmark benchmark)
+        {
+
+        }
+
     }
 }

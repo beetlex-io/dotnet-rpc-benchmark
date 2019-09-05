@@ -11,33 +11,33 @@ namespace RPCBenchmark
 
     public class GRPCHandler
     {
-
-        public GRPCHandler()
+        static GRPCHandler()
         {
-            Client = new Channel("192.168.2.19:50051", ChannelCredentials.Insecure);
 
-            Greeter = new Greeter.GreeterClient(Client);
-        }
-
-        public Channel Client { get; private set; }
-
-        public Greeter.GreeterClient Greeter { get; private set; }
-
-        private static GRPCHandler mSingle;
-
-        public static GRPCHandler Single
-        {
-            get
+            for (int i = 0; i < 3; i++)
             {
-                if (mSingle == null)
-                    mSingle = new GRPCHandler();
-                return mSingle;
+                var client = new Channel($"{Setting.SERVER_HOST}:50051", ChannelCredentials.Insecure);
+                mClients.Add(new Greeter.GreeterClient(client));
             }
         }
+
+        static List<Greeter.GreeterClient> mClients = new List<Greeter.GreeterClient>();
+
+        static long mIndex;
+
+        public static Greeter.GreeterClient GetClient()
+        {
+            var index = System.Threading.Interlocked.Increment(ref mIndex);
+            return mClients[(int)(mIndex % mClients.Count)];
+        }
+
     }
-    [System.ComponentModel.Category("RPC")]
-    public class GRPCHelloWorld : CodeBenchmark.IExample
+
+
+    [System.ComponentModel.Category("Hello")]
+    public class GRPC_Hello : CodeBenchmark.IExample
     {
+
         public void Dispose()
         {
 
@@ -45,15 +45,69 @@ namespace RPCBenchmark
 
         public async Task Execute()
         {
-            var result = await _greeter.SayHelloAsync(new HelloRequest { Name = "you" });
+            var result = await Greeter.SayHelloAsync(new HelloRequest { Name = "you" });
         }
 
         public void Initialize(Benchmark benchmark)
         {
-            _greeter = GRPCHandler.Single.Greeter;
+            Greeter = GRPCHandler.GetClient();
         }
 
-        private Greeter.GreeterClient _greeter;
+        private Greeter.GreeterClient Greeter;
+    }
+
+    [System.ComponentModel.Category("Register")]
+    public class GRPC_Register : CodeBenchmark.IExample
+    {
+
+        public void Dispose()
+        {
+
+        }
+
+        public async Task Execute()
+        {
+            var request = new RegisterRequest
+            {
+                Name = "henryfan",
+                City = "guangzhou",
+                Email = "henryfan@msn.com",
+                Title = "cxo",
+                Password = "12345678"
+            };
+            var result = await Greeter.RegisterAsync(request);
+        }
+
+        public void Initialize(Benchmark benchmark)
+        {
+            Greeter = GRPCHandler.GetClient();
+        }
+
+        private Greeter.GreeterClient Greeter;
+    }
+
+    [System.ComponentModel.Category("List")]
+    public class GRPC_List : CodeBenchmark.IExample
+    {
+
+        public void Dispose()
+        {
+
+        }
+
+        public async Task Execute()
+        {
+            var result = await Greeter.ListAsync(new SearchRequest { Count = 10 });
+            if (result.Items.Count < 10)
+                throw new Exception("list error");
+        }
+
+        public void Initialize(Benchmark benchmark)
+        {
+            Greeter = GRPCHandler.GetClient();
+        }
+
+        private Greeter.GreeterClient Greeter;
     }
 
 }
