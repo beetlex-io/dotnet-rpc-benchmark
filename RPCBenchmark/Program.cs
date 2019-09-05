@@ -12,7 +12,12 @@ namespace RPCBenchmark
             Benchmark benchmark = new Benchmark();
             benchmark.Register(typeof(Program).Assembly);
             benchmark.Start();
-            benchmark.HttpApiServer.Log( BeetleX.EventArgs.LogType.Info, $"rpc server [{Setting.SERVER_HOST}]");
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            {
+                benchmark.OpenWeb();
+            }
+
+            benchmark.HttpApiServer.Log(BeetleX.EventArgs.LogType.Info, $"rpc server [{Setting.SERVER_HOST}]");
             Console.Read();
         }
     }
