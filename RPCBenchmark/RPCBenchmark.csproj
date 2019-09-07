@@ -11,7 +11,7 @@
     <PackageReference Include="BeetleX.XRPC.Clients" Version="0.6.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.0.0-preview8.19405.4" />
     <PackageReference Include="NetxClient" Version="1.4.4" />
-    <PackageReference Include="SpanJson" Version="2.0.14" />
+    <PackageReference Include="Swifter.Json" Version="1.2.9.5" />
   </ItemGroup>
 
   <ItemGroup>
