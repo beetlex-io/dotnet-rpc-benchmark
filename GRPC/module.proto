@@ -27,6 +27,8 @@ service Greeter {
   rpc SayHello (HelloRequest) returns (HelloReply) {}
   rpc Register (RegisterRequest) returns (User){}
   rpc List(SearchRequest) returns(SearchReply){}
+    rpc Get(NullRequest) returns(World){}
+  rpc ListDB(NullRequest) returns(ListReply){}
 }
 
 // The request message containing the user's name.
@@ -35,6 +37,10 @@ message HelloRequest {
 }
 
 // The response message containing the greetings
+message NullRequest
+{
+	string message=1;
+}
 message HelloReply {
   string message = 1;
 }
@@ -66,4 +72,19 @@ message SearchRequest
 message SearchReply
 {
 	repeated User Items=1;
+}
+
+message World
+{
+	int32 Id=1;
+	int32 RandomNumber=2;
+}
+message Fortune
+{
+     int32 Id=1;
+	 string Message=2;
+}
+message ListReply
+{
+repeated Fortune Items=1;
 }

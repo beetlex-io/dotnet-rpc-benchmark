@@ -132,6 +132,45 @@ namespace RPCBenchmark.Examples
         private ITestServer _greeter;
     }
 
+    [System.ComponentModel.Category("DB-GET")]
+    public class Netx_DB_GET : CodeBenchmark.IExample
+    {
+        public void Dispose()
+        {
+
+        }
+        public async Task Execute()
+        {
+            var result = await _greeter.Get();
+        }
+        public void Initialize(Benchmark benchmark)
+        {
+            _greeter = NetxHandler.GetClient();
+        }
+
+        private ITestServer _greeter;
+    }
+
+    [System.ComponentModel.Category("DB-List")]
+    public class Netx_DB_List : CodeBenchmark.IExample
+    {
+        public void Dispose()
+        {
+
+        }
+        public async Task Execute()
+        {
+            var result = await _greeter.List();
+        }
+        public void Initialize(Benchmark benchmark)
+        {
+            _greeter = NetxHandler.GetClient();
+        }
+
+        private ITestServer _greeter;
+    }
+
+
 
     [Build]
     public interface ITestServer
@@ -147,6 +186,13 @@ namespace RPCBenchmark.Examples
 
         [TAG(1003)]
         Task<int> Add(int a, int b);
+
+
+        [TAG(1004)]
+        Task<World> Get();
+
+        [TAG(1005)]
+        Task<IList<Fortune>> List();
     }
 
 
@@ -173,5 +219,21 @@ namespace RPCBenchmark.Examples
     public class NetxHelloReply
     {
         public string Message { get; set; }
+    }
+
+    public class Fortune
+    {
+
+        public int Id { get; set; }
+
+        public string Message { get; set; }
+
+    }
+    public class World
+    {
+
+        public int Id { get; set; }
+
+        public int RandomNumber { get; set; }
     }
 }

@@ -39,9 +39,9 @@ namespace RPCBenchmark
         }
         public void Initialize(Benchmark benchmark)
         {
-            
+
         }
-       
+
     }
     [System.ComponentModel.Category("Register")]
     public class XRPC_Register : CodeBenchmark.IExample
@@ -90,14 +90,49 @@ namespace RPCBenchmark
         }
         public async Task Execute()
         {
-            var result = await XRPCHandler.Greeter.Add(1,2);
-            if (result!=3)
+            var result = await XRPCHandler.Greeter.Add(1, 2);
+            if (result != 3)
                 throw new Exception("res error");
         }
         public void Initialize(Benchmark benchmark)
         {
 
         }
+    }
 
+    [System.ComponentModel.Category("DB-GET")]
+    public class XPRC_DB_GET : CodeBenchmark.IExample
+    {
+        public void Dispose()
+        {
+
+        }
+        public async Task Execute()
+        {
+
+            var result = await XRPCHandler.Greeter.Get();
+
+        }
+        public void Initialize(Benchmark benchmark)
+        {
+
+        }
+    }
+
+    [System.ComponentModel.Category("DB-List")]
+    public class XPRC_DB_List : CodeBenchmark.IExample
+    {
+        public void Dispose()
+        {
+
+        }
+        public async Task Execute()
+        {
+            var result = await XRPCHandler.Greeter.ListDB();
+        }
+        public void Initialize(Benchmark benchmark)
+        {
+
+        }
     }
 }

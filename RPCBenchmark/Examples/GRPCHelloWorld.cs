@@ -110,4 +110,42 @@ namespace RPCBenchmark
         private Greeter.GreeterClient Greeter;
     }
 
+
+    [System.ComponentModel.Category("DB-GET")]
+    public class GRPC_DB_GET : CodeBenchmark.IExample
+    {
+        public void Dispose()
+        {
+
+        }
+        public async Task Execute()
+        {
+            var result = await Greeter.GetAsync(new NullRequest());
+        }
+        public void Initialize(Benchmark benchmark)
+        {
+            Greeter = GRPCHandler.GetClient();
+        }
+
+        private Greeter.GreeterClient Greeter;
+    }
+
+    [System.ComponentModel.Category("DB-List")]
+    public class GRPC_DB_List : CodeBenchmark.IExample
+    {
+        public void Dispose()
+        {
+
+        }
+        public async Task Execute()
+        {
+            var result = await Greeter.ListDBAsync(new NullRequest());
+        }
+        public void Initialize(Benchmark benchmark)
+        {
+            Greeter = GRPCHandler.GetClient();
+        }
+
+        private Greeter.GreeterClient Greeter;
+    }
 }
