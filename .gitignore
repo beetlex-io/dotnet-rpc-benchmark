@@ -1,4 +1,5 @@
 .vs/RPCBenchmark/v15/
+.vs
 GRPC/Greeter/bin/
 GRPC/Greeter/obj/
 GRPC/GreeterServer/bin/
