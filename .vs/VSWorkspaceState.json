@@ -1,11 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\GRPC",
-    "\\GRPC\\GreeterServer",
     "\\NetX",
-    "\\Orleans",
-    "\\Orleans\\Greeter.Server"
+    "\\RPCBenchmark"
   ],
   "SelectedNode": "\\RPCBenchmark.sln",
   "PreviewInSolutionExplorer": false
