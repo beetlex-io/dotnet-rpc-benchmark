@@ -10,6 +10,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Orleans.Runtime.Abstractions" Version="3.0.0-beta1" />
+    <PackageReference Include="Npgsql" Version="4.0.9" />
   </ItemGroup>
 
   <ItemGroup>

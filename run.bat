@@ -1,5 +1,6 @@
 SET host="127.0.0.1"
-start dotnet public\grpc\GreeterServer.dll %host%
-start dotnet public\xrpc\XRPCServer.dll %host%
-start dotnet public\orleans\OGreeter.Server.dll %host%
-start dotnet public\netx\NetxService.dll %host%
+SET dbhost="192.168.2.19"
+start dotnet grpc\GreeterServer.dll %host% %dbhost%
+start dotnet xrpc\XRPCServer.dll %host% %dbhost%
+start dotnet orleans\OGreeter.Server.dll %host% %dbhost%
+start dotnet netx\NetxService.dll %host% %dbhost%

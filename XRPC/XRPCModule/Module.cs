@@ -16,6 +16,10 @@ namespace XRPCModule
         Task<List<User>> List(int count);
 
         Task<int> Add(int a,int b);
+
+        Task<World> Get();
+
+        Task<IList<Fortune>> ListDB();
     }
 
     [MessagePackObject]
@@ -43,8 +47,6 @@ namespace XRPCModule
         public string ID { get; set; }
     }
 
-
-
     [MessagePackObject]
     public class HelloRequest
     {
@@ -57,6 +59,26 @@ namespace XRPCModule
     {
         [Key(0)]
         public string Message { get; set; }
+    }
+    [MessagePackObject]
+    public class Fortune
+    {
+
+        [Key(0)]
+        public int Id { get; set; }
+
+        [Key(1)]
+        public string Message { get; set; }
+
+    }
+    [MessagePackObject]
+    public class World
+    {
+        [Key(0)]
+        public int Id { get; set; }
+
+        [Key(1)]
+        public int RandomNumber { get; set; }
     }
 
 }
