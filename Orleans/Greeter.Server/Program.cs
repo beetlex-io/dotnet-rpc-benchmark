@@ -8,6 +8,7 @@ using Orleans.Hosting;
 using System.Net;
 using System.Threading.Tasks;
 using OGreeter.IGrains;
+using System;
 
 namespace OGreeter.Server
 {
@@ -18,6 +19,11 @@ namespace OGreeter.Server
             string host = "127.0.0.1";
             if (args != null && args.Length > 0)
                 host = args[0];
+            string dbHost = "127.0.0.1";
+            if (args != null && args.Length > 1)
+                dbHost = args[1];
+            Console.WriteLine($"Server Host:{host}| DB Host:{dbHost}");
+            GreeterGrains.ConnectionString = $"Server={dbHost};Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=256;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3";
             IPAddress ip = IPAddress.Parse(host);
             return new HostBuilder()
             .UseOrleans(builder =>

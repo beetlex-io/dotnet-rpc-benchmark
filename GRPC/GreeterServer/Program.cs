@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Helloworld;
@@ -21,8 +23,65 @@ namespace GreeterServer
 {
     class GreeterImpl : Greeter.GreeterBase
     {
-        // Server side handler of the SayHello RPC
-        public override Task<HelloReply> SayHello(HelloRequest request, ServerCallContext context)
+
+        public async override Task<World> Get(NullRequest request, ServerCallContext context)
+        {
+            using (var db = Npgsql.NpgsqlFactory.Instance.CreateConnection())
+            {
+                db.ConnectionString = Program.ConnectionString;
+                var cmd = db.CreateCommand();
+                cmd.CommandText = "SELECT id, randomnumber FROM world WHERE id = @Id";
+                var id = cmd.CreateParameter();
+                id.ParameterName = "@Id";
+                id.DbType = DbType.Int32;
+                id.Value = new Random().Next(1, 10001);
+                cmd.Parameters.Add(id);
+                await db.OpenAsync();
+                using (var rdr = await cmd.ExecuteReaderAsync(CommandBehavior.SingleRow))
+                {
+                    await rdr.ReadAsync();
+                    return new World
+                    {
+                        Id = rdr.GetInt32(0),
+                        RandomNumber = rdr.GetInt32(1)
+                    };
+                }
+            }
+        }
+
+
+
+        public async override Task<ListReply> ListDB(NullRequest request, ServerCallContext context)
+        {
+            ListReply reply = new ListReply();
+            using (var db = Npgsql.NpgsqlFactory.Instance.CreateConnection())
+            {
+                db.ConnectionString = Program.ConnectionString;
+                var cmd = db.CreateCommand();
+                cmd.CommandText = "SELECT id, message FROM fortune";
+                var id = cmd.CreateParameter();
+                id.ParameterName = "@Id";
+                id.DbType = DbType.Int32;
+                id.Value = new Random().Next(1, 10001);
+                cmd.Parameters.Add(id);
+                await db.OpenAsync();
+                using (var rdr = await cmd.ExecuteReaderAsync(CommandBehavior.CloseConnection))
+                {
+                    while (await rdr.ReadAsync())
+                    {
+                        reply.Items.Add(new Fortune
+                        {
+                            Id = rdr.GetInt32(0),
+                            Message = rdr.GetString(1)
+                        });
+                    }
+                }
+            }
+            return reply;
+        }
+
+
+        public  override Task<HelloReply> SayHello(HelloRequest request, ServerCallContext context)
         {
             return Task.FromResult(new HelloReply { Message = "Hello " + request.Name });
         }
@@ -67,11 +126,18 @@ namespace GreeterServer
     {
         const int Port = 50051;
 
+        public static string ConnectionString = "";
+
         public static void Main(string[] args)
         {
             string host = "127.0.0.1";
             if (args != null && args.Length > 0)
                 host = args[0];
+            string dbHost = "127.0.0.1";
+            if (args != null && args.Length > 1)
+                dbHost = args[1];
+            ConnectionString = $"Server={dbHost};Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=256;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3";
+            Console.WriteLine($"Server Host:{host}| DB Host:{dbHost}");
             Server server = new Server
             {
                 Services = { Greeter.BindService(new GreeterImpl()) },

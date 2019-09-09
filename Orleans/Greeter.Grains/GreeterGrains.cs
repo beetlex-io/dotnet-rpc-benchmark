@@ -3,6 +3,7 @@ using OGreeter.IGrains.Messages;
 using Orleans.Concurrency;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 
 namespace OGreeter.Grains
@@ -10,9 +11,66 @@ namespace OGreeter.Grains
     [StatelessWorker]
     public class GreeterGrains : Orleans.Grain, IGreeterGrains
     {
+
+        public static string ConnectionString = "";
+
         public Task<int> Add(int a, int b)
         {
             return Task.FromResult(a + b);
+        }
+
+        public async Task<World> Get()
+        {
+            using (var db = Npgsql.NpgsqlFactory.Instance.CreateConnection())
+            {
+                db.ConnectionString = ConnectionString;
+                var cmd = db.CreateCommand();
+                cmd.CommandText = "SELECT id, randomnumber FROM world WHERE id = @Id";
+                var id = cmd.CreateParameter();
+                id.ParameterName = "@Id";
+                id.DbType = DbType.Int32;
+                id.Value = new Random().Next(1, 10001);
+                cmd.Parameters.Add(id);
+                await db.OpenAsync();
+                using (var rdr = await cmd.ExecuteReaderAsync(CommandBehavior.SingleRow))
+                {
+                    await rdr.ReadAsync();
+                    return new World
+                    {
+                        Id = rdr.GetInt32(0),
+                        RandomNumber = rdr.GetInt32(1)
+                    };
+                }
+            }
+        }
+
+        public async Task<IList<Fortune>> List()
+        {
+            var result = new List<Fortune>();
+            using (var db = Npgsql.NpgsqlFactory.Instance.CreateConnection())
+            {
+                db.ConnectionString = ConnectionString;
+                var cmd = db.CreateCommand();
+                cmd.CommandText = "SELECT id, message FROM fortune";
+                var id = cmd.CreateParameter();
+                id.ParameterName = "@Id";
+                id.DbType = DbType.Int32;
+                id.Value = new Random().Next(1, 10001);
+                cmd.Parameters.Add(id);
+                await db.OpenAsync();
+                using (var rdr = await cmd.ExecuteReaderAsync(CommandBehavior.CloseConnection))
+                {
+                    while (await rdr.ReadAsync())
+                    {
+                        result.Add(new Fortune
+                        {
+                            Id = rdr.GetInt32(0),
+                            Message = rdr.GetString(1)
+                        });
+                    }
+                }
+            }
+            return result;
         }
 
         public Task<List<User>> List(int count)
@@ -34,6 +92,7 @@ namespace OGreeter.Grains
             }
             return Task.FromResult(items);
         }
+
 
         public Task<User> Register(string name, string email, string password, string title, string city)
         {

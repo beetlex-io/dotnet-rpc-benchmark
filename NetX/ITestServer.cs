@@ -20,6 +20,12 @@ namespace NetxTestServer
 
         [TAG(1003)]
         Task<int> Add(int a, int b);
+
+        [TAG(1004)]
+        Task<World> Get();
+
+        [TAG(1005)]
+        Task<IList<Fortune>> List();
     }
 
 
@@ -49,5 +55,21 @@ namespace NetxTestServer
     public class HelloReply
     {
         public string Message { get; set; }
+    }
+
+    public class Fortune
+    {
+
+        public int Id { get; set; }
+
+        public string Message { get; set; }
+
+    }
+    public class World
+    {
+
+        public int Id { get; set; }
+
+        public int RandomNumber { get; set; }
     }
 }

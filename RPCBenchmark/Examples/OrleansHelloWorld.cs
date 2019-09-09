@@ -144,4 +144,42 @@ namespace RPCBenchmark.Examples
 
         IGreeterGrains GreeterGrains;
     }
+
+    [System.ComponentModel.Category("DB-GET")]
+    public class Orleans_DB_GET : CodeBenchmark.IExample
+    {
+        public void Dispose()
+        {
+
+        }
+        public async Task Execute()
+        {
+            var result = await GreeterGrains.Get();
+        }
+        public void Initialize(Benchmark benchmark)
+        {
+            GreeterGrains = OrleansHandler.GreeterGrains();
+        }
+
+        IGreeterGrains GreeterGrains;
+    }
+
+    [System.ComponentModel.Category("DB-List")]
+    public class Orleans_DB_List : CodeBenchmark.IExample
+    {
+        public void Dispose()
+        {
+
+        }
+        public async Task Execute()
+        {
+            var result = await GreeterGrains.List();
+        }
+        public void Initialize(Benchmark benchmark)
+        {
+            GreeterGrains = OrleansHandler.GreeterGrains();
+        }
+
+        IGreeterGrains GreeterGrains;
+    }
 }

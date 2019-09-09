@@ -14,5 +14,9 @@ namespace OGreeter.IGrains
         Task<List<User>> List(int count);
 
         Task<int> Add(int a, int b);
+
+        Task<World> Get();
+
+        Task<IList<Fortune>> List();
     }
 }

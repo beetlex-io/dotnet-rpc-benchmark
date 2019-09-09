@@ -2,6 +2,7 @@
 using EventNext;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using XRPCModule;
 
@@ -11,17 +12,25 @@ namespace XRPCServer
     {
         private static BeetleX.XRPC.XRPCServer mXRPCServer;
 
+        public static string ConnectionString = "";
+
         static void Main(string[] args)
         {
             string host = "127.0.0.1";
             if (args != null && args.Length > 0)
                 host = args[0];
+            string dbHost = "192.168.2.19";
+            if (args != null && args.Length > 1)
+                dbHost = args[1];
+           
+            ConnectionString = $"Server={dbHost};Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=256;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3";
             mXRPCServer = new BeetleX.XRPC.XRPCServer();
             mXRPCServer.ServerOptions.LogLevel = BeetleX.EventArgs.LogType.Error;
             mXRPCServer.ServerOptions.DefaultListen.Host = host;
             mXRPCServer.ServerOptions.DefaultListen.Port = 50052;
             mXRPCServer.Register(typeof(Program).Assembly);
             mXRPCServer.Open();
+            mXRPCServer.Log(BeetleX.EventArgs.LogType.Info,$"Server Host:{host}| DB Host:{dbHost}");
             Console.Read();
         }
 
@@ -70,6 +79,60 @@ namespace XRPCServer
         public Task<int> Add(int a,int b)
         {
             return Task.FromResult(a + b);
+        }
+        [ThreadInvoke(ThreadType.ThreadPool)]
+        public async Task<World> Get()
+        {
+            using (var db =Npgsql.NpgsqlFactory.Instance.CreateConnection())
+            {
+                db.ConnectionString = Program.ConnectionString;
+                var cmd = db.CreateCommand();
+                cmd.CommandText = "SELECT id, randomnumber FROM world WHERE id = @Id";
+                var id = cmd.CreateParameter();
+                id.ParameterName = "@Id";
+                id.DbType = DbType.Int32;
+                id.Value = new Random().Next(1, 10001);
+                cmd.Parameters.Add(id);
+                await db.OpenAsync();
+                using (var rdr = await cmd.ExecuteReaderAsync(CommandBehavior.SingleRow))
+                {
+                    await rdr.ReadAsync();
+                    return new World
+                    {
+                        Id = rdr.GetInt32(0),
+                        RandomNumber = rdr.GetInt32(1)
+                    };
+                }
+            }
+        }
+        [ThreadInvoke(ThreadType.ThreadPool)]
+        public async Task<IList<Fortune>> ListDB()
+        {
+            var result = new List<Fortune>();
+            using (var db = Npgsql.NpgsqlFactory.Instance.CreateConnection())
+            {
+                db.ConnectionString = Program.ConnectionString;
+                var cmd = db.CreateCommand();
+                cmd.CommandText = "SELECT id, message FROM fortune";
+                var id = cmd.CreateParameter();
+                id.ParameterName = "@Id";
+                id.DbType = DbType.Int32;
+                id.Value = new Random().Next(1, 10001);
+                cmd.Parameters.Add(id);
+                await db.OpenAsync();
+                using (var rdr = await cmd.ExecuteReaderAsync(CommandBehavior.CloseConnection))
+                {
+                    while (await rdr.ReadAsync())
+                    {
+                        result.Add(new Fortune
+                        {
+                            Id = rdr.GetInt32(0),
+                            Message = rdr.GetString(1)
+                        });
+                    }
+                }
+            }
+            return result;
         }
     }
 }
