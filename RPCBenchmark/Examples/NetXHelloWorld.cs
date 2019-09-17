@@ -12,7 +12,7 @@ namespace RPCBenchmark.Examples
     {
         static NetxHandler()
         {
-            for(int i=0;i<3;i++)
+            for(int i=0;i<4;i++)
             {
                var client = new NetxSClientBuilder()
                .ConfigConnection(p =>
@@ -29,13 +29,11 @@ namespace RPCBenchmark.Examples
             }
         }
 
-        private static long mIndex;
+        private static int mIndex;
 
         public static ITestServer GetClient()
-        {
-            long index = System.Threading.Interlocked.Increment(ref mIndex);
-            return mClients[(int)(index % mClients.Count)].Get<ITestServer>();
-        }
+         => mClients[System.Threading.Interlocked.Increment(ref mIndex) % 4].Get<ITestServer>();
+        
 
 
         private static List<NetxSClient> mClients = new List<NetxSClient>();
